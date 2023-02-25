@@ -3,7 +3,6 @@ from model.github import GithubAuth
 
 import requests
 from requests.auth import HTTPBasicAuth
-import json
 
 
 class GithubClient:

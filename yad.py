@@ -26,6 +26,7 @@ async def get_root(request: Request):
 async def post_root(request: Request, payload: Dict[str, Any]):
     event_header = request.headers["x-github-event"]
     if event_header is not None:
-        map_handler(event_header, **payload)
+        handler = map_handler(event_header, payload["action"], payload)
+        handler.handle()
 
     return None
