@@ -23,6 +23,22 @@ class GithubClient:
             url, headers=self.get_default_headers(), json=data, auth=self._get_auth()
         ).json()
 
+    def patch(self, resource: str, json: Dict[str, Any]):
+        requests.patch(
+            GithubClient.get_url(resource),
+            headers=self.get_default_headers(),
+            json=json,
+            auth=self._get_auth(),
+        )
+
+    def put(self, resource: str, json: Dict[str, Any]):
+        requests.put(
+            GithubClient.get_url(resource),
+            headers=self.get_default_headers(),
+            json=json,
+            auth=self._get_auth(),
+        )
+
     def comment_on_issue(
         self, repo_owner: str, repo: str, issue_number: int, comment_body: str
     ):
@@ -58,6 +74,19 @@ class GithubClient:
             json=dict(assignees=assignees),
             auth=self._get_auth(),
         )
+
+    def close_pull_request(self, owner: str, repo: str, pull_number: int):
+        resource = f"/repos/{owner}/{repo}/pulls/{pull_number}"
+        self.patch(resource, dict(state="closed"))
+
+    def lock_conversation(self, owner: str, repo: str, issue_number: int, reason: str):
+        if reason not in ["off-topic", "too heated", "resolved", "spam"]:
+            raise ValueError(
+                "Lock reason must be one of: off-topic, too heated, resolved, spam"
+            )
+
+        resource = f"/repos/{owner}/{repo}/issues/{issue_number}/lock"
+        self.put(resource, dict(lock_reason=reason))
 
     @staticmethod
     def get_url(resource: str) -> str:
