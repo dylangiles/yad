@@ -1,0 +1,2 @@
+# haifa
+Repository manager bot
