@@ -1,2 +1,2 @@
-# haifa
+# yad
 Repository manager bot
